@@ -162,16 +162,14 @@ app.get("/test", (req, res) => {
 
 function ToIstTime(timestamp) {
   const date = new Date(timestamp);
-  const ISTOffset = 5.5;
-  date.setHours(date.getHours() + ISTOffset);
-  const ISTTimestamp = date.getTime();
+  const ISTOffset = 330; // 5.5 hours in minutes
+  date.setMinutes(date.getMinutes() + ISTOffset);
 
-  let dateFormat = {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  };
-  return date.toLocaleDateString("en-US", dateFormat).toString();
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are 0-based in JavaScript
+  const year = String(date.getUTCFullYear()); // Get last 2 digits of year
+
+  return `${day}/${month}/${year}`;
 }
 
 app.listen(process.env.PORT || 3000);
