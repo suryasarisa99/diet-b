@@ -69,49 +69,15 @@ app.post("/attendance", (req, res) => {
     rollNo,
     from,
     to,
+    user,
+    password,
     excludeOtherSubjects = true,
   } = req.body;
 
   let fromDate = null,
     toDate = null;
-  let dateFormat = {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  };
-  // if (from) {
-  //   fromDate = new Date(+from);
-  //   fromDate = fromDate.toLocaleDateString("en-US", dateFormat).toString();
-  // }
-  // if (to) {
-  //   toDate = new Date(+to);
-  //   toDate = toDate.toLocaleDateString("en-US", dateFormat).toString();
-  // }
-  // if (from) {
-  //   fromDate = new Date(+from);
-  //   fromDate.setMinutes(fromDate.getMinutes() + 330); // adjust to IST
-  //   fromDate = new Date(
-  //     Date.UTC(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate())
-  //   );
-  //   fromDate = fromDate.toLocaleDateString("en-US", dateFormat).toString();
-  // }
-  // if (to) {
-  //   toDate = new Date(+to);
-  //   toDate.setMinutes(toDate.getMinutes() + 330); // adjust to IST
-  //   toDate = new Date(
-  //     Date.UTC(toDate.getFullYear(), toDate.getMonth(), toDate.getDate())
-  //   );
-  //   toDate = toDate.toLocaleDateString("en-US", dateFormat).toString();
-  // }
-
-  if (from) {
-    fromDate = ToIstTime(+from);
-  }
-  if (to) {
-    toDate = ToIstTime(+to);
-  }
-  console.log(cookie, fromDate, toDate, rollNo);
-
+  if (from) fromDate = ToIstTime(+from);
+  if (to) toDate = ToIstTime(+to);
   getAttendence({
     cookie,
     rollNo,
@@ -119,45 +85,40 @@ app.post("/attendance", (req, res) => {
     to: toDate,
     excludeOtherSubjects,
   }).then((html) => {
-    res.json(html);
+    if (html.total.held == "Password") {
+      console.log("Cookie Expired");
+      getCookie(user, password).then((newCookie) => {
+        getAttendence({
+          cookie: newCookie.cookie,
+          rollNo,
+          from: fromDate,
+          to: toDate,
+          excludeOtherSubjects,
+        }).then((html) => {
+          console.log(html);
+          return res.json({
+            ...html,
+            ...newCookie,
+          });
+        });
+      });
+    } else {
+      res.json(html);
+    }
   });
 });
 
-const temp = {
-  data: [
-    { subject: "ML", held: 48, attend: 42, percent: 87.5 },
-    { subject: "CD", held: 22, attend: 20, percent: 90.91 },
-    { subject: "CNS", held: 46, attend: 38, percent: 82.61 },
-    { subject: "OOAD", held: 34, attend: 32, percent: 94.12 },
-    { subject: "DLD", held: 31, attend: 27, percent: 87.1 },
-    { subject: "ML Lab", held: 24, attend: 22, percent: 91.67 },
-    { subject: "CD Lab", held: 24, attend: 18, percent: 75 },
-    { subject: "CNS Lab", held: 19, attend: 14, percent: 73.68 },
-    { subject: "SO Lab", held: 18, attend: 15, percent: 83.33 },
-    { subject: "SPORTS", held: 6, attend: 6, percent: 100 },
-    { subject: "CRT", held: 102, attend: 83, percent: 81.37 },
-    { subject: "ES", held: 6, attend: 5, percent: 83.33 },
-  ],
-  total: { subject: "TOTAL", held: "380", attend: "322", percent: "84.74" },
-  bio: {
-    RollNo: "21u41a0507",
-    StudentName: "DODDI BHASKAR",
-    Course: "B.Tech",
-    Branch: "CSE",
-    Semester: "VI Semester",
-  },
-};
 app.get("/test", (req, res) => {
   // getCookie("21u41a0546", "18122001").then((cookie) => {
   //   res.json(cookie);
   // });
 
-  // getAttendence({
-  //   cookie: defaultCookie,
-  //   rollNo: "21u41a0546",
-  // }).then(async (html) => {
-  //   res.json(html);
-  // });
+  getAttendence({
+    cookie: defaultCookie,
+    rollNo: "21u41a0546",
+  }).then(async (html) => {
+    res.json(html);
+  });
 
   console.log("requested: test");
   // res.json(temp);
