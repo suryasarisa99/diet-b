@@ -1,0 +1,12 @@
+curl 'http://103.138.0.69/ecap/default.aspx' \
+  -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
+  -H 'Accept-Language: en-US,en;q=0.9' \
+  -H 'Cache-Control: max-age=0' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -H 'Origin: http://103.138.0.69' \
+  -H 'Referer: http://103.138.0.69/ecap/' \
+  -H 'Upgrade-Insecure-Requests: 1' \
+  -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' \
+  --data-raw '__VIEWSTATE=%2FwEPDwUKMTgyNDM2Njk1MA9kFgICAw9kFgoCAQ8WAh4JaW5uZXJodG1sZWQCAw8PFgIeBFRleHRlZGQCBw8PZBYCHgpvbmtleXByZXNzBRBfb25FbXBLZXlQcmVzcygpZAILDw8WAh8BZWRkAg8PD2QWAh8CBRRfb25TdHVkZW50S2V5UHJlc3MoKWQYAQUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgMFB2ltZ0J0bjEFB2ltZ0J0bjIFB2ltZ0J0bjNAo%2B6%2F01UwRZV8mQ5r6LHji7HfOg%3D%3D&__VIEWSTATEGENERATOR=24A3F8C7&__EVENTVALIDATION=%2FwEWCwLlo6S%2FCAKM%2B9rqDwLW44bXBAKz5pu%2FBAKM%2B87qDwKFqK2XBgKEovX%2BAgKM%2B9LqDwKgkcssAuzRsusGAum41%2BkIxI7QFDwL%2FVxmYwCviED6UDxw6Ro%3D&txtId1=&txtPwd1=&txtId2=21u41a0546&txtPwd2=18122001&imgBtn2.x=37&imgBtn2.y=16&txtId3=&txtPwd3=' \
+  --insecure
