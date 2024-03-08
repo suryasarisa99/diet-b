@@ -40,6 +40,28 @@ app.post("/body", (req, res) => {
   res.json(req.body);
 });
 
+app.post("/date", (req, res) => {
+  const {
+    cookie = defaultCookie,
+    rollNo,
+    from,
+    to,
+    excludeOtherSubjects = true,
+  } = req.body;
+
+  console.log(cookie, fromDate, toDate, rollNo);
+
+  getAttendence({
+    cookie,
+    rollNo,
+    from,
+    to,
+    excludeOtherSubjects,
+  }).then((html) => {
+    res.json(html);
+  });
+});
+
 app.post("/attendance", (req, res) => {
   const {
     cookie = defaultCookie,
