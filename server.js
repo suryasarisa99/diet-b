@@ -37,6 +37,7 @@ app.get("/login", (req, res) => {
 
 app.post("/body", (req, res) => {
   console.log(req.body);
+  res.json(req.body);
 });
 
 app.post("/attendance", (req, res) => {
@@ -73,7 +74,7 @@ app.post("/attendance", (req, res) => {
     to: toDate,
     excludeOtherSubjects,
   }).then((html) => {
-    res.send(html);
+    res.json(html);
   });
 });
 
