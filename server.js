@@ -84,21 +84,29 @@ app.post("/attendance", (req, res) => {
   //   toDate = new Date(+to);
   //   toDate = toDate.toLocaleDateString("en-US", dateFormat).toString();
   // }
+  // if (from) {
+  //   fromDate = new Date(+from);
+  //   fromDate.setMinutes(fromDate.getMinutes() + 330); // adjust to IST
+  //   fromDate = new Date(
+  //     Date.UTC(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate())
+  //   );
+  //   fromDate = fromDate.toLocaleDateString("en-US", dateFormat).toString();
+  // }
+  // if (to) {
+  //   toDate = new Date(+to);
+  //   toDate.setMinutes(toDate.getMinutes() + 330); // adjust to IST
+  //   toDate = new Date(
+  //     Date.UTC(toDate.getFullYear(), toDate.getMonth(), toDate.getDate())
+  //   );
+  //   toDate = toDate.toLocaleDateString("en-US", dateFormat).toString();
+  // }
+
   if (from) {
-    fromDate = new Date(+from);
-    fromDate = new Date(
-      Date.UTC(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate())
-    );
-    fromDate = fromDate.toLocaleDateString("en-US", dateFormat).toString();
+    let fromDate = ToIstTime(from);
   }
   if (to) {
-    toDate = new Date(+to);
-    toDate = new Date(
-      Date.UTC(toDate.getFullYear(), toDate.getMonth(), toDate.getDate())
-    );
-    toDate = toDate.toLocaleDateString("en-US", dateFormat).toString();
+    let toDate = ToIstTime(to);
   }
-
   console.log(cookie, fromDate, toDate, rollNo);
 
   getAttendence({
@@ -151,6 +159,20 @@ app.get("/test", (req, res) => {
   console.log("requested: test");
   // res.json(temp);
 });
+
+function ToIstTime(timestamp) {
+  const date = new Date(timestamp);
+  const ISTOffset = 5.5;
+  date.setHours(date.getHours() + ISTOffset);
+  const ISTTimestamp = date.getTime();
+
+  let dateFormat = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  };
+  return date.toLocaleDateString("en-US", dateFormat).toString();
+}
 
 app.listen(process.env.PORT || 3000);
 
