@@ -76,12 +76,26 @@ app.post("/attendance", (req, res) => {
     month: "2-digit",
     day: "2-digit",
   };
+  // if (from) {
+  //   fromDate = new Date(+from);
+  //   fromDate = fromDate.toLocaleDateString("en-US", dateFormat).toString();
+  // }
+  // if (to) {
+  //   toDate = new Date(+to);
+  //   toDate = toDate.toLocaleDateString("en-US", dateFormat).toString();
+  // }
   if (from) {
     fromDate = new Date(+from);
+    fromDate = new Date(
+      Date.UTC(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate())
+    );
     fromDate = fromDate.toLocaleDateString("en-US", dateFormat).toString();
   }
   if (to) {
     toDate = new Date(+to);
+    toDate = new Date(
+      Date.UTC(toDate.getFullYear(), toDate.getMonth(), toDate.getDate())
+    );
     toDate = toDate.toLocaleDateString("en-US", dateFormat).toString();
   }
 
