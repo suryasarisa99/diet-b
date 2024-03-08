@@ -27,10 +27,13 @@ app.use("/auth", require("./routes/auth"));
 
 let defaultCookie =
   "ASP.NET_SessionId=wc5m2gvo3pqqrg55pfg2dhyc;frmAuth=F91ACA404BADA49B3CB65AD2107AACCE872EBD10B18EB29B3F11C0329C6491C80006A4F81982715511A1FB59204B12FE29C083F360FC8CBC04772B9C04FBA9FA4060EFD2D6B65DD0308DADB19B82C60986A55A9D00DE2EE493082F0F84C9432EF34A8DF34D1ABC0C4A2E835C480B6FE0CA8F4768A5DF771E6229A473A89D3C15879B13D36FD1920A4771DD8F7AEE0D45520135A5188DFAE081E1D05F989E2C4BC0BD27C1";
-app.get("/login", (req, res) => {
+app.post("/login", (req, res) => {
   const { user, password } = req.body;
 
+  console.log("IN: Login ", user, password);
+
   getCookie(user, password).then((cookie) => {
+    console.log(cookie);
     res.json(cookie);
   });
 });
@@ -149,12 +152,12 @@ app.get("/test", (req, res) => {
   //   res.json(cookie);
   // });
 
-  getAttendence({
-    cookie: defaultCookie,
-    rollNo: "21u41a0546",
-  }).then(async (html) => {
-    res.json(html);
-  });
+  // getAttendence({
+  //   cookie: defaultCookie,
+  //   rollNo: "21u41a0546",
+  // }).then(async (html) => {
+  //   res.json(html);
+  // });
 
   console.log("requested: test");
   // res.json(temp);
