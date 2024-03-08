@@ -49,8 +49,6 @@ app.post("/date", (req, res) => {
     excludeOtherSubjects = true,
   } = req.body;
 
-  console.log(cookie, fromDate, toDate, rollNo);
-
   getAttendence({
     cookie,
     rollNo,
