@@ -15,8 +15,9 @@ const fs = require("fs/promises");
 const use = require("./utils/use");
 const dbConnection = require("./utils/db");
 
-const { getCookie, getAttendence } = require("./lib/std/attendence");
-
+const { getAttendence } = require("./lib/std/attendence");
+const { getCookie } = require("./lib/std/utils");
+const { getGraph } = require("./lib/std/graph");
 use(app);
 // dbConnection();
 
@@ -63,6 +64,21 @@ app.post("/date", (req, res) => {
   });
 });
 
+app.post("/graph", (req, res) => {
+  const { rollNo, cookie, excludeOtherSubjects = false } = req.body;
+  console.log("graph requested");
+  // console.log(req.body);
+  getGraph({
+    cookie,
+    rollNo,
+    excludeOtherSubjects,
+    // from,
+    // to
+  }).then((html) => {
+    console.log("graph response sent");
+    res.json(html);
+  });
+});
 app.post("/attendance", (req, res) => {
   const {
     cookie = defaultCookie,
@@ -74,6 +90,7 @@ app.post("/attendance", (req, res) => {
     excludeOtherSubjects = true,
   } = req.body;
 
+  console.log("Attendance: Requesst");
   let fromDate = null,
     toDate = null;
   if (from) fromDate = ToIstTime(+from);
@@ -109,16 +126,21 @@ app.post("/attendance", (req, res) => {
 });
 
 app.get("/test", (req, res) => {
-  // getCookie("21u41a0546", "18122001").then((cookie) => {
-  //   res.json(cookie);
-  // });
+  getCookie("21u41a0546", "18122001")
+    .then((cookie) => {
+      console.log(cookie);
+      res.json(cookie);
+    })
+    .catch((err) => {
+      console.log("error in geting cookie", err);
+    });
 
-  getAttendence({
-    cookie: defaultCookie,
-    rollNo: "21u41a0546",
-  }).then(async (html) => {
-    res.json(html);
-  });
+  // getAttendence({
+  //   cookie: defaultCookie,
+  //   rollNo: "21u41a0546",
+  // }).then(async (html) => {
+  //   res.json(html);
+  // });
 
   console.log("requested: test");
   // res.json(temp);
