@@ -65,18 +65,54 @@ app.post("/date", (req, res) => {
 });
 
 app.post("/graph", (req, res) => {
-  const { rollNo, cookie, excludeOtherSubjects = false } = req.body;
+  const {
+    rollNo,
+    cookie,
+    expire,
+    user,
+    password,
+    excludeOtherSubjects = false,
+  } = req.body;
   console.log("graph requested");
   // console.log(req.body);
+
+  let diff = new Date() - new Date(+expire);
+
+  if (diff < 4 * 60 * 60 * 1000) {
+    console.log(
+      "cookie has valid for hrs : ",
+      (diff / 1000 / 60 / 60).toFixed(2)
+    );
+  } else {
+    console.log(
+      "Cookie is Expired by hrs: ",
+      (diff / 1000 / 60 / 60).toFixed(2)
+    );
+    getCookie(user, password).then((newCookie) => {
+      getGraph({
+        cookie: newCookie.cookie,
+        rollNo,
+        excludeOtherSubjects,
+        // from,
+        // to
+      }).then((data) => {
+        console.log("graph response sent");
+        return res.json({
+          arr: data,
+          ...newCookie,
+        });
+      });
+    });
+  }
   getGraph({
     cookie,
     rollNo,
     excludeOtherSubjects,
     // from,
     // to
-  }).then((html) => {
+  }).then((data) => {
     console.log("graph response sent");
-    res.json(html);
+    res.json({ arr: data });
   });
 });
 app.post("/attendance", (req, res) => {
@@ -88,13 +124,45 @@ app.post("/attendance", (req, res) => {
     user,
     password,
     excludeOtherSubjects = true,
+    expire,
   } = req.body;
 
-  console.log("Attendance: Requesst");
-  let fromDate = null,
-    toDate = null;
+  let fromDate = "",
+    toDate = "";
   if (from) fromDate = ToIstTime(+from);
   if (to) toDate = ToIstTime(+to);
+
+  console.log("cookie created: ", new Date(+expire));
+  console.log("current date: ", new Date());
+
+  let diff = new Date() - new Date(+expire);
+
+  if (diff < 4 * 60 * 60 * 1000) {
+    console.log(
+      "cookie has valid for hrs : ",
+      (diff / 1000 / 60 / 60).toFixed(2)
+    );
+  } else {
+    console.log(
+      "Cookie is Expired by hrs: ",
+      (diff / 1000 / 60 / 60).toFixed(2)
+    );
+    getCookie(user, password).then((newCookie) => {
+      getAttendence({
+        cookie: newCookie.cookie,
+        rollNo,
+        from: fromDate,
+        to: toDate,
+        excludeOtherSubjects,
+      }).then((html) => {
+        return res.json({
+          ...html,
+          ...newCookie,
+        });
+      });
+    });
+  }
+
   getAttendence({
     cookie,
     rollNo,
@@ -105,6 +173,7 @@ app.post("/attendance", (req, res) => {
     if (html.total.held == "Password") {
       console.log("Cookie Expired");
       getCookie(user, password).then((newCookie) => {
+        console.log(newCookie);
         getAttendence({
           cookie: newCookie.cookie,
           rollNo,
@@ -112,7 +181,6 @@ app.post("/attendance", (req, res) => {
           to: toDate,
           excludeOtherSubjects,
         }).then((html) => {
-          console.log(html);
           return res.json({
             ...html,
             ...newCookie,
