@@ -115,7 +115,7 @@ app.post("/graph", (req, res) => {
     res.json({ arr: data });
   });
 });
-app.post("/attendance", (req, res) => {
+app.post("/attendance", async (req, res) => {
   const {
     cookie = defaultCookie,
     rollNo,
@@ -136,6 +136,8 @@ app.post("/attendance", (req, res) => {
   console.log("current date: ", new Date());
 
   let diff = new Date() - new Date(+expire);
+
+  new Promise((resolve, reject) => setTimeout(resolve, 5000));
 
   if (diff < 4 * 60 * 60 * 1000) {
     console.log(
@@ -188,7 +190,7 @@ app.post("/attendance", (req, res) => {
         });
       });
     } else {
-      res.json(html);
+      return res.json(html);
     }
   });
 });
