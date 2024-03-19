@@ -137,7 +137,7 @@ app.post("/attendance", async (req, res) => {
 
   let diff = new Date() - new Date(+expire);
 
-  new Promise((resolve, reject) => setTimeout(resolve, 5000));
+  await new Promise((resolve, reject) => setTimeout(resolve, 5000));
 
   if (diff < 4 * 60 * 60 * 1000) {
     console.log(
